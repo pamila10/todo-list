@@ -1,0 +1,17 @@
+.form {
+  &__fieldBl {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid lightgrey;
+    padding: 10px 0;
+  }
+
+  &__fieldWrap {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 5px;
+  }
+}
