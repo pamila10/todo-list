@@ -19,9 +19,6 @@
     "sass": "^1.77.8",
     "web-vitals": "^2.1.4"
   },
-  "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object"
-  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -47,5 +44,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-private-property-in-object": "^7.25.7"
   }
 }
