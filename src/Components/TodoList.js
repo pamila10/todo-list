@@ -1,12 +1,8 @@
 import React from 'react'
-import TodoItem from './TodoItem';
+import TodoItem from './TodoItem'
 
 function TodoList({ 
-  todo, todoTitle, 
-  handleUpdate, loading,
-  deleteTodo, updateTodo, 
-  toggleDone, todoIsEditing, 
-  setTodoIsEditing
+  todo, loading, deleteTodo, updateTodo, setTodo
 }) {
 
   if (todo == null) {
@@ -21,7 +17,7 @@ function TodoList({
     <div>
       {loading ? (
           <div className='loader'>
-            <div className='loader__spinner'></div>
+            <div className='loader_spinner'></div>
           </div>
         ) : (
           <>
@@ -29,15 +25,13 @@ function TodoList({
             <>
               {todo.map((item) => {
                 return (
-                  <TodoItem key={item.id} 
-                  id={item.id} item={item}
-                  toggleDone={toggleDone}
-                  todoTitle={todoTitle}
-                  handleUpdate={handleUpdate}
-                  deleteTodo={deleteTodo}
-                  updateTodo={updateTodo}
-                  todoIsEditing={todoIsEditing}
-                  setTodoIsEditing={setTodoIsEditing}></TodoItem>
+                  <TodoItem
+                    item={item}
+                    todo={todo}
+                    setTodo={setTodo}
+                    deleteTodo={deleteTodo}
+                    updateTodo={updateTodo}
+                  ></TodoItem>
                 )
               })}
             </>

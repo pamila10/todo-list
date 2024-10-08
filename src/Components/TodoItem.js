@@ -1,14 +1,34 @@
 import React, { useState } from 'react'
 import s from './TodoItem.module.scss'
+import { FaPen, FaTrash, FaSave } from "react-icons/fa"
 
 function TodoItem({ 
-  id, item,
-  todoTitle, handleUpdate,
-  deleteTodo, updateTodo, 
-  toggleDone
+  item, deleteTodo, updateTodo, todo, setTodo
 }) {
 
   const [todoIsEditing, setTodoIsEditing] = useState(false)
+
+  let id = item.id
+  const toggleDone = (item) => {
+
+    const updatedList = todo.map((elem => {
+      if (item.id === elem.id) {
+        item.completed = !item.completed
+      }
+      return elem
+    }))
+
+    setTodo(updatedList)
+  }
+
+  const handleUpdate = (id, key, value) => {
+    setTodo((values) => {
+      return values.map((item) => {
+          return item.id === id ? { ...item, [key]: value } : item
+        }
+      );
+    });
+  }
 
   const activateEditMode = () => {
     setTodoIsEditing(true)
@@ -16,37 +36,40 @@ function TodoItem({
 
   const deactivateEditMode = () => {
     setTodoIsEditing(false)
-    updateTodo(id)
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    deactivateEditMode(id)
+    updateTodo(id)
   }
 
   const viewTemplate = (
     <>
-      <div className={s.form__fieldBl}>
-        <div className={s.form__fieldWrap}>
+      <div className={s.form_fieldBl}>
+        <div className={s.form_fieldWrap}>
           <input
+            className='checkbox'
             type='checkbox'
             checked={item.completed}
             onChange={(e) => {
               toggleDone(item)
             }}
           />
-          <p>{item?.title}</p>
+          <p className='text'>{item?.title}</p>
         </div>
-        <div className={s.form__fieldWrap}>
+        <div className={s.form_fieldWrap}>
           <button className='btn'
-            onClick={(e) => {
+            onClick={() => {
               activateEditMode()
-            }}>Edit</button>
+            }}><FaPen className='btn_icon'/></button>
           <button title='Delete Task' 
             className='btn'
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault()
               deleteTodo(id)
             }}>
-            X
+            <FaTrash className='btn_icon'/>
           </button>
         </div>
       </div>
@@ -54,31 +77,28 @@ function TodoItem({
   )
 
   const editTemplate = (
-    <div className={s.form__fieldBl}>
-      <input autoFocus 
-        id='todoTitle'
-        type='text'
-        name='todoTitle'
-        maxLength={35} 
-        value={todoTitle}
-        onChange={handleUpdate}
-      />
-      <button className='btn'
-        title='Edit Task' 
-        onClick={() => {
-          deactivateEditMode(id)
-        }}
-      >
-        Save
-      </button>
-    </div>
+    <form onSubmit={handleSubmit} className={s.form} onBlur={deactivateEditMode}>
+      <div className={s.form_fieldBl}>
+        <input autoFocus 
+          id='todoTitle'
+          type='text'
+          name='todoTitle'
+          maxLength={100} 
+          value={item.title}
+          onChange={(e) => handleUpdate(id, "title", e.target.value)}
+        />
+        <button className='btn'>
+          <FaSave className='btn_icon'/>
+        </button>
+      </div>
+    </form>
   )
   
 
   return (
-    <form onSubmit={handleSubmit} className={s.form}>
+    <div>
       {todoIsEditing ? editTemplate : viewTemplate}
-    </form>
+    </div>
   )
 
 }

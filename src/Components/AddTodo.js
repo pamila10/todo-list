@@ -1,30 +1,35 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import s from './AddTodo.module.scss'
+import { FaRegSquarePlus } from "react-icons/fa6"
 
-function AddTodo({ handleSubmit, handleChange, todoText }) {
+function AddTodo({ addTodo, setTodoTitle, todoTitle}) {
 
-  const inputRef = useRef(null)
+  const handleOnSubmit = (e) => {
+    e.preventDefault();
+    addTodo()
+  };
 
   return (
     <div>
       <div>
-        <form onSubmit={handleSubmit} className={s.form}>
-          <label htmlFor='todoTitle'>
+        <form onSubmit={handleOnSubmit} className={s.form}>
+          <label htmlFor='todoTitle' className={s.form__title}>
             Add task:
           </label>
           <input autoFocus 
             required
             id='todoTitle'
+            className='field'
             type='text'
             name='todoTitle'
             maxLength={35} 
-            onChange={handleChange} 
-            value={todoText}
+            onChange={(e) => setTodoTitle(e.target.value)} 
+            value={todoTitle}
             placeholder='What needs to be done?'
           />
-          <button variant='contained' type='submit' className='btn'
-            onClick={() => inputRef.current ? inputRef.current.focus() : false}
-          >Add</button>
+          <button type='submit' className='btn'>
+            <FaRegSquarePlus className='btn_icon btn_icon___lg' />
+          </button>
         </form>
       </div>
     </div>

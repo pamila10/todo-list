@@ -11,7 +11,6 @@ function App() {
 
   const [todo, setTodo] = useState()
   const [loading, setLoading] = useState(true)
-  const [todoText, setTodoText] = useState('')
   const [todoTitle, setTodoTitle] = useState('')
   const [pageCount, setpageCount] = useState(0)
 
@@ -46,29 +45,22 @@ function App() {
     ).then((data) => {
       setTodo(data?.data)
     })
-  };
-
-  const handleClick = (data) => {
-    let currentPage = data.selected + 1;
-    const newTodoList = fetchNewTodo(currentPage);
-    setTodo(newTodoList);
-  };
-
-  const handleChange = (e) => {
-    e.preventDefault()
-    setTodoText(e.target.value)
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleClick = (data) => {
+    let currentPage = data.selected + 1
+    const newTodoList = fetchNewTodo(currentPage)
+    setTodo(newTodoList)
+  }
 
+  const addTodo = () => {
     const id = nanoid()
-    const newTodo = { completed: false, id : id, title: todoText, userId: id }
+    const newTodo = { completed: false, id : id, title: todoTitle, userId: id }
 
     if(!newTodo) {
       return false
     }
-    setTodoText('')
+    setTodoTitle('')
 
     API
       .post('todos', { ...newTodo })
@@ -81,20 +73,14 @@ function App() {
       })
   }
 
-  const handleUpdate = (e) => {
-    const value = e.target.value;
-    setTodoTitle(value)
-  }
-
   const updateTodo = (id) => {
     const todoItem = todo.find(item => item.id === id)
-
     API
       .put(`todos/${id}`, {  
         userId: todoItem.userId,
         id: todoItem.id,
-        title: todoTitle,
-        completed: todoItem.completed,
+        title: todoItem.title,
+        completed: todoItem.completed
        })
       .then((res) => {
         const updatedList = todo.map((elem => {
@@ -105,8 +91,11 @@ function App() {
         }))
         setTodo(updatedList)
       })
+      .catch((err) => {
+        console.log(err);
+        console.log(`Error: ${err.message}`)
+      })
   }
-
 
   const deleteTodo = (id) => {
     API
@@ -120,20 +109,8 @@ function App() {
       })
   }
 
-  const toggleDone = (item) => {
-
-    const updatedList = todo.map((elem => {
-      if (item.id === elem.id) {
-        item.completed = !item.completed
-      }
-      return elem
-    }))
-
-    setTodo(updatedList)
-  }
-
   return (
-    <div className="App">
+    <div className="App" >
       <header>
         <div className="container">
           <h1>Todo List</h1>
@@ -142,10 +119,9 @@ function App() {
       <div className="container">
         <section className="section">
             <AddTodo 
-              todo={todo} 
-              setTodo={setTodo}
-              handleChange={handleChange}
-              handleSubmit={handleSubmit}
+              todoTitle={todoTitle}
+              setTodoTitle={setTodoTitle}
+              addTodo={addTodo}
             />
         </section>
         <section className="section">
@@ -153,9 +129,8 @@ function App() {
               todo={todo}
               setTodo={setTodo}
               loading={loading} 
-              toggleDone={toggleDone}
-              handleUpdate={handleUpdate}
               todoTitle={todoTitle}
+              setTodoTitle={setTodoTitle}
               updateTodo={updateTodo}
               deleteTodo={deleteTodo}
             />
